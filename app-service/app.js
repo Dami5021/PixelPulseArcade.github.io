@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
+const userRoutes = require("./src/routes/UserRoutes");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -12,6 +13,9 @@ const corsOptions = {
   origin: "*",
   credentials: true,
 };
+
+//Routes
+app.use("/api", userRoutes);
 
 const DB_URI = process.env.DB_CONNECTION;
 mongoose
