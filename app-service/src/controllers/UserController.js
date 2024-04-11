@@ -14,6 +14,10 @@ const getUser = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
     res.status(200).json(user);
   } catch (error) {
     console.log("Error retrieving this user: ", error);
@@ -23,6 +27,10 @@ const getUser = async (req, res) => {
 
 const addUser = async (req, res) => {
   const { username, name, email, password } = req.body;
+  if (!username || !name || !email || !password) {
+    res.status(400).json({ message: "All fields are required" });
+    return;
+  }
   const user = new User({ username, name, email, password });
   try {
     const newUser = await user.save();
