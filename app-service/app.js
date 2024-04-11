@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
 const userRoutes = require("./src/routes/UserRoutes");
+const scoreRoutes = require("./src/routes/ScoreRoutes");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,7 +16,8 @@ const corsOptions = {
 };
 
 //Routes
-app.use("/api", userRoutes);
+app.use(userRoutes);
+app.use(scoreRoutes);
 
 const DB_URI = process.env.DB_CONNECTION;
 mongoose
