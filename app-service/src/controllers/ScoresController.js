@@ -1,9 +1,9 @@
-const Score = require("../models/Score");
+const Scores = require("../models/Scores");
 
 const getScore = async (req, res) => {
   const { id } = req.params;
   try {
-    const score = await Score.findById(id);
+    const score = await Scores.findById(id);
     res.status(200).json(score);
   } catch (error) {
     console.log("Error retrieving this score: ", error);
@@ -13,7 +13,7 @@ const getScore = async (req, res) => {
 
 const addScore = async (req, res) => {
   const { username, score, game, date } = req.body;
-  const newScore = new Score({ username, score, game, date });
+  const newScore = new Scores({ username, score, game, date });
   try {
     const savedScore = await newScore.save();
     res.status(201).json(savedScore);
@@ -23,38 +23,10 @@ const addScore = async (req, res) => {
   }
 };
 
-const getHighScores = async (req, res) => {
-  const { game } = req.params;
-  const limit = 10;
-  try {
-    const scores = await Score.find({ game }).sort({ score: -1 }).limit(limit);
-    res.status(200).json(scores);
-  } catch (error) {
-    console.error("Error fetching high scores: ", error);
-    res.status(500).json({ message: "Request failed" });
-  }
-};
-
-const updateHighScore = async (req, res) => {
-  const { id } = req.params;
-  const { score } = req.body;
-  try {
-    const updatedScore = await Score.findByIdAndUpdate(
-      id,
-      { score },
-      { new: true }
-    );
-    res.status(200).json(updatedScore);
-  } catch (error) {
-    console.error("Error updating score: ", error);
-    res.status(500).json({ message: "Request failed" });
-  }
-};
-
 const getGameScores = async (req, res) => {
   const { game } = req.params;
   try {
-    const scores = await Score.find({ game });
+    const scores = await Scores.find({ game: game });
     res.status(200).json(scores);
   } catch (error) {
     console.error("Error fetching scores: ", error);
@@ -62,10 +34,10 @@ const getGameScores = async (req, res) => {
   }
 };
 
-const getUserScores = async (req, res) => {
+const getUsersScores = async (req, res) => {
   const { username } = req.params;
   try {
-    const scores = await Score.find({ username });
+    const scores = await Scores.find({ username: username });
     res.status(200).json(scores);
   } catch (error) {
     console.error("Error fetching scores: ", error);
@@ -76,8 +48,6 @@ const getUserScores = async (req, res) => {
 module.exports = {
   getScore,
   addScore,
-  getHighScores,
-  updateHighScore,
   getGameScores,
-  getUserScores,
+  getUsersScores,
 };
