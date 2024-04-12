@@ -1,0 +1,5 @@
+.idea
+client/src/assets/unitygames
+client/node_modules
+*.zip
+unitygames.zip
