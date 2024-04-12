@@ -1,0 +1,6 @@
+.background{
+    backgroundImage: url(/bg-light.png);
+    height: 100vh;
+    backgroundSize: cover;
+    backgroundRepeat: repeat;
+}
