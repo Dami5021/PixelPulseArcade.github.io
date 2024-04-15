@@ -20,6 +20,13 @@ const games = [
         desc:"Watch a crate have a good time.",
         imageSrc:"/src/assets/crate.png"
     },
+    {
+        id:"2",
+        name:"Tacocats",
+        genre:"Adventure",
+        desc:"Check out some cats.",
+        imageSrc:"/src/assets/tacocats.png"
+    },
 ]
 
 export default function MainPage(){
