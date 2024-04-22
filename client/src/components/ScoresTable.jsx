@@ -7,23 +7,24 @@ export default function ScoresTable(props){
     }
 
     let rows = []
-    for(let score of props.scores){
+    props.scores.forEach((score, idx) => {
         rows.push(
             <tr>
-                <td>{score.rank}</td>
+                <td>{idx + 1}</td>
                 <td>{score.username}</td>
                 <td>{score.score}</td>
-                <td>{score.date}</td>
+                <td>{score.date.slice(0, 10)}</td>
             </tr>
         )
-    }
+    })
+
     return (
         <Table striped bordered hover>
             <thead>
                 <tr>
                     <th>Rank</th>
                     <th>Username</th>
-                    <th>{props.scoreName}</th>
+                    <th>{props.scores[0].scorename}</th>
                     <th>Date</th>
                 </tr>
             </thead>

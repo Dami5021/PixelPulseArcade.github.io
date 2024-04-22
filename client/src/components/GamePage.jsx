@@ -2,6 +2,8 @@ import {Unity, useUnityContext} from "react-unity-webgl";
 import {useLocation} from "react-router";
 import {Container} from "react-bootstrap";
 
+//TODO: Allow for non-unity games to be passed in
+//TODO: Get scores from games
 export default function GamePage(){
     const location = useLocation()
     const gameName = location.state

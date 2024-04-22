@@ -2,7 +2,7 @@ import {Button, Container, Row} from "react-bootstrap";
 import GameCard from "./GameCard.jsx";
 import {Link} from "react-router-dom";
 
-//TODO: Put the actual games in here. Or read them from the db
+//TODO: Read the games from the db for better performance
 
 const games = [
     {
@@ -31,7 +31,6 @@ const games = [
 
 export default function MainPage(){
     return(
-
             <Container className={'overflow-scroll z-0'} >
                 <Row className="d-flex justify-content-evenly flex-wrap py-5">
                     {games.map((game, i) =>
@@ -55,6 +54,5 @@ export default function MainPage(){
                     </div>
                 </Row>
             </Container>
-
     )
 }
