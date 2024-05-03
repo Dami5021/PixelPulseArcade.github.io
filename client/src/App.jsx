@@ -17,12 +17,12 @@ function App() {
         <TopBar />
         <Routes>
             <Route exact path="/" element={<MainPage />} />
-            <Route path="/game" element={<GamePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/highscores" element={<HighScoresPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/game" element={<GamePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/highscores" element={<HighScoresPage />} />
         </Routes>
     </Router>
   )

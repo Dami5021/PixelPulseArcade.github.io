@@ -2,7 +2,7 @@ import {Button, Container, Row} from "react-bootstrap";
 import GameCard from "./GameCard.jsx";
 import {Link} from "react-router-dom";
 
-//TODO: Read the games from the db for better performance
+//TODO: Read the games from the db
 
 const games = [
     {
