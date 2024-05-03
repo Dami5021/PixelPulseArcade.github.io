@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 const games = [
     {
         id:"0",
-        name:"Stupid Game",
+        name:"Lil Game",
         genre:"Sports",
         desc:"You are the ball.",
         players:"1",
