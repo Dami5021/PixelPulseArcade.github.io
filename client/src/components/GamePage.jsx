@@ -22,12 +22,12 @@ export default function GamePage(){
         setScore(score);
     }, []);
 
-    // useEffect(() => {
-    //     addEventListener("GameOver", handleGameOver);
-    //     return () => {
-    //         removeEventListener("GameOver", handleGameOver);
-    //     };
-    // }, [addEventListener, removeEventListener, handleGameOver]);
+    useEffect(() => {
+        addEventListener("GameOver", handleGameOver);
+        return () => {
+            removeEventListener("GameOver", handleGameOver);
+        };
+    }, [addEventListener, removeEventListener, handleGameOver]);
 
     return (
         <Container className={'d-flex mx-auto mt-3'} >

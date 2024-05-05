@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, {useContext, useState} from "react"
 import axios from 'axios'
 
 const AuthContext = React.createContext()
@@ -13,30 +13,51 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
 
-    function signup(email, password) {
-        if (!userExists(email)){
-            return false
-        } else {
-            axios.post(serverRoot + '/users', {
-                email: email,
-                password: password,
+    function signup(username, name, email, password) {
+        axios.post(serverRoot + 'users', {
+            username: username,
+            name: name,
+            email: email,
+            password: password,
+        })
+            .then(function (response) {
+                return true
             })
-                .then(function (response) {
-                    return true
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            return false
-        }
+            .catch(function (error) {
+                console.log(error);
+            });
+        return false
     }
 
     function login(email, password) {
-        if (!userExists(email)){
-            return false
-        } else {
-            return passwordCorrect(email, password);
-        }
+        // return axios.get(serverRoot + 'users')
+        //     .then((response) => {
+        //         let users = response.data;
+        //         for (const user of users) {
+        //             if (hasValue(user, email)) {
+        //                 if (user.password === password){
+        //                     setCurrentUser(user)
+        //                     return true;
+        //                 }
+        //             }
+        //         }
+        //     }).catch(error => {
+        //         if (error.response) {
+        //             console.log("Error with response: " + error.response)
+        //         } else if (error.request) {
+        //             console.log("Error with request: ")
+        //             console.log(error.request)
+        //         } else {
+        //             console.log("Non-axios error")
+        //         }
+        //     });
+        let userPassword = axios.get(serverRoot + 'users/:' + email)
+            .then((response) => {
+                return response.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        return userPassword === password;
     }
 
     function logout() {
@@ -49,6 +70,8 @@ export function AuthProvider({ children }) {
 
     function updateEmail(email) {
         const updates = {
+            username: currentUser.username,
+            name: currentUser.name,
             email: email,
             password: currentUser.password
         }
@@ -57,6 +80,8 @@ export function AuthProvider({ children }) {
 
     function updatePassword(password) {
         const updates = {
+            username: currentUser.username,
+            name: currentUser.name,
             email: currentUser.email,
             password: password
         }
@@ -64,7 +89,7 @@ export function AuthProvider({ children }) {
     }
 
     function deleteUser() {
-        axios.delete(serverRoot + '/users/:' + id, )
+        axios.delete(serverRoot + 'users/:' + currentUser.id, )
             .then(function (response) {
                 return true
             })
@@ -73,7 +98,6 @@ export function AuthProvider({ children }) {
             });
         return false
     }
-
     // useEffect(() => {
     //     const unsubscribe = auth.onAuthStateChanged(user => {
     //         setCurrentUser(user)
@@ -91,42 +115,45 @@ export function AuthProvider({ children }) {
         resetPassword,
         updateEmail,
         updatePassword,
-        deleteAccount
+        deleteUser
     }
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     )
 }
 
 function userExists(email){
-    useEffect(() => {
-        axios.get(serverRoot + 'users')
-            .then((response) => {
-                let users = response.data;
-                return hasValue(users, email);
-            }).catch(error => {
-            if (error.response){
+    return axios.get(serverRoot + 'users')
+        .then((response) => {
+            let users = response.data;
+            for (const user of users) {
+                if (hasValue(user, email)) {
+                    return true;
+                }
+            }
+        }).catch(error => {
+            if (error.response) {
                 console.log("Error with response: " + error.response)
-            } else if (error.request){
+            } else if (error.request) {
                 console.log("Error with request: ")
                 console.log(error.request)
             } else {
                 console.log("Non-axios error")
             }
-        })
-    }, []);
-    return false
+        });
 }
 
 function passwordCorrect(email, password) {
-    return false
+
 }
 
 function updateUser(id, updates){
-    axios.patch(serverRoot + '/users/:' + id, {
+    axios.patch(serverRoot + 'users/:' + id, {
+        username: updates.username,
+        name: updates.name,
         email: updates.email,
         password: updates.password,
     })

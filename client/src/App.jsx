@@ -8,22 +8,25 @@ import Login from "./components/Login.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import SignUp from "./components/SignUp.jsx";
 import GamePage from "./components/GamePage.jsx";
+import {AuthProvider} from "./contexts/AuthContext.jsx";
 
 //TODO: Add private route for MainPage after Login is implemented?
 function App() {
 
   return (
     <Router>
-        <TopBar />
-        <Routes>
-            <Route exact path="/" element={<MainPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/game" element={<GamePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/highscores" element={<HighScoresPage />} />
-        </Routes>
+        <AuthProvider>
+            <TopBar />
+            <Routes>
+                <Route exact path="/" element={<MainPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/game" element={<GamePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/highscores" element={<HighScoresPage />} />
+            </Routes>
+        </AuthProvider>
     </Router>
   )
 }

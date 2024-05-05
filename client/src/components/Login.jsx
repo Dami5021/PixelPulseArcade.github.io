@@ -1,31 +1,29 @@
 import React, { useRef, useState } from "react"
 import {Form, Button, Card, Alert, Container} from "react-bootstrap"
-// import { useAuth } from "../contexts/AuthContext"
-import { Link } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
+import {Link, useNavigate} from "react-router-dom"
 
-//TODO: add auth
 export default function Login() {
     const emailRef = useRef()
     const passwordRef = useRef()
-    //const { login } = useAuth()
+    const { login } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    // const history = useHistory()
+    const navigate = useNavigate()
 
-    // async function handleSubmit(e) {
-    //     e.preventDefault()
-    //
-    //     try {
-    //         setError("")
-    //         setLoading(true)
-    //         await login(emailRef.current.value, passwordRef.current.value)
-    //         history.push("/")
-    //     } catch {
-    //         setError("Failed to log in")
-    //     }
-    //
-    //     setLoading(false)
-    // }
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        try {
+            setError("")
+            setLoading(true)
+            await login(emailRef.current, passwordRef.current)
+            navigate('/')
+        } catch {
+            setError("Failed to log in")
+        }
+        setLoading(false)
+    }
 
     return (
         <Container>
@@ -33,7 +31,7 @@ export default function Login() {
                 <Card.Body>
                     <h2 className="text-center mb-4">Log In</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
-                    <Form onSubmit={""}>
+                    <Form onSubmit={handleSubmit}>
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" ref={emailRef} required/>
@@ -54,7 +52,6 @@ export default function Login() {
                     </div>
                 </Card.Body>
             </Card>
-
         </Container>
     )
 }
