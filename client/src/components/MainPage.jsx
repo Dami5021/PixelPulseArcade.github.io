@@ -10,20 +10,23 @@ const games = [
         name:"Lil Game",
         genre:"Sports",
         desc:"You are the ball.",
+        type: "unity",
         players:"1",
         imageSrc:"/src/assets/stupidgame.png"
     },
     {
         id:"1",
-        name:"Crate",
-        genre:"Simulation",
-        desc:"Watch a crate have a good time.",
+        name:"Whack A Rat",
+        genre:"Action",
+        type:"html5",
+        desc:"Give those moles a good whack.",
         imageSrc:"/src/assets/crate.png"
     },
     {
         id:"2",
         name:"Tacocats",
         genre:"Adventure",
+        type:"unity",
         desc:"Check out some cats.",
         imageSrc:"/src/assets/tacocats.png"
     },
@@ -38,6 +41,7 @@ export default function MainPage(){
                             name={game.name}
                             genre={game.genre}
                             desc={game.desc}
+                            type={game.type}
                             imageSrc={game.imageSrc}
                             id={game.id}
                             key={i}

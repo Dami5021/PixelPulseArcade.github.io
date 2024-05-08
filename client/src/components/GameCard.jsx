@@ -7,7 +7,7 @@ export default function GameCard(props) {
     const pathName = props.name.replace(/\s+/g, '')
     return (
         <Card style={{ width: '15rem' }} className={"m-2 p-1"}>
-            <Link to={'/game'} state={pathName}>
+            <Link to={'/game'} state={pathName+props.type}>
                 <Card.Img className="img-fluid border border-2" variant="top" src={props.imageSrc} />
             </Link>
             <Card.Body>
@@ -17,7 +17,7 @@ export default function GameCard(props) {
                         <Accordion.Body>
                             <p><em>{props.genre}</em></p>
                             <p>{props.desc}</p>
-                            <Link to={'/game'} state={pathName}>
+                            <Link to={'/game'} state={pathName+props.type}>
                                 <Button variant="success">Play!</Button>
                             </Link>
                         </Accordion.Body>

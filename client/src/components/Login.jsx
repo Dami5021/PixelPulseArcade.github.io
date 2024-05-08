@@ -13,11 +13,13 @@ export default function Login() {
 
     async function handleSubmit(e) {
         e.preventDefault()
-
+        console.log(emailRef.current)
+        console.log(passwordRef.current)
         try {
+
             setError("")
             setLoading(true)
-            await login(emailRef.current, passwordRef.current)
+            let loggedIn = await login(emailRef.current, passwordRef.current)
             navigate('/')
         } catch {
             setError("Failed to log in")

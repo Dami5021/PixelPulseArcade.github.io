@@ -7,8 +7,13 @@ import {useState} from "react";
 //TODO: Fix bug where offcanvas resets dark mode
 export default function TopBar(){
     const { logout, currentUser } = useAuth()
+    const [currentUName, setCurrentUName] = useState("");
     const navigate = useNavigate()
     const [error, setError] = useState("")
+
+    if (currentUser != null)
+        setCurrentUName(currentUser.username)
+
     async function handleLogout() {
         setError("")
 
@@ -19,12 +24,13 @@ export default function TopBar(){
             setError("Failed to log out")
         }
     }
+
     return (
         <Navbar sticky={"top"} bg={"success"} data-bs-theme={'dark'} className={'text-light'} expand={false}>
             <Nav className={"mx-auto align-middle"} >
                 <Link to={"/"} className="h1 mb-0 link-underline link-underline-opacity-0">PixelPulse Arcade</Link>
             </Nav>
-            {/*<p>{currentUser.username}</p>*/}
+            <p>{currentUName}</p>
             <div className={'mx-3'}>
                 <Navbar.Toggle aria-controls={"offcanvasNavbar-expand-false"}/>
                 <Navbar.Offcanvas placement={'end'} >

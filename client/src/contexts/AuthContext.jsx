@@ -56,6 +56,7 @@ export function AuthProvider({ children }) {
                 return response.data;
             }).catch(function (error) {
                 console.log(error);
+                return null
             });
         return userPassword === password;
     }
