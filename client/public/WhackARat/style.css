@@ -1,6 +1,6 @@
 #game-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr); 
     gap: 10px;
 }
 
@@ -11,15 +11,14 @@
     border-radius: 50%;
     position: relative;
     border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 
-.rat {
-    width: 80px;
-    height: 80px;
-    background-color: #ffd700;
+.rat, .hammer {
+    max-width: 80px;
+    max-height: 80px;
     border-radius: 50%;
-    position: absolute;
-    top: 10px;
-    left: 10px;
     display: none;
 }
