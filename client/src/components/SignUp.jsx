@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
-<<<<<<< HEAD
+
 import { useAuth } from "../contexts/AuthContext"
 import {Link, useNavigate} from "react-router-dom"
-=======
+
 // import { useAuth } from "../contexts/AuthContext"
 import { Link, useNavigate } from "react-router-dom"
->>>>>>> 57ec0ba (Login page and SignUp page connect to backend.)
 // import CreateUser from "./CreateUser";
 import axios from 'axios'
 
@@ -15,9 +14,7 @@ export default function SignUp() {
     const usernameRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
-<<<<<<< HEAD
     const { signup } = useAuth()
-=======
 
     const [email, setEmail] = useState()
     const [username, setUsername] = useState()
@@ -25,10 +22,9 @@ export default function SignUp() {
     const [passwordConfirm, setPasswordConfirmation] = useState("")
     const navigate = useNavigate()
     // const { signup } = useAuth()
->>>>>>> 57ec0ba (Login page and SignUp page connect to backend.)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
+
 
     async function handleSubmit(e) {
         e.preventDefault()
