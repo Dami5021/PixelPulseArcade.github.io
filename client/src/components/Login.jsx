@@ -2,15 +2,13 @@ import React, { useRef, useState } from "react"
 import {Form, Button, Card, Alert, Container} from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import {Link, useNavigate} from "react-router-dom"
-
 // import { useAuth } from "../contexts/AuthContext"
-import { Link,useNavigate  } from "react-router-dom"
 import axios from 'axios'
 //TODO: add auth
 export default function Login() {
     const emailRef = useRef()
     const passwordRef = useRef()
-    const { login } = useAuth()
+    // const { login } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -22,21 +20,21 @@ export default function Login() {
 
     // const history = useHistory()
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-        console.log(emailRef.current)
-        console.log(passwordRef.current)
-        try {
+    // async function handleSubmit(e) {
+    //     e.preventDefault()
+    //     console.log(emailRef.current)
+    //     console.log(passwordRef.current)
+    //     try {
 
-            setError("")
-            setLoading(true)
-            let loggedIn = await login(emailRef.current, passwordRef.current)
-            navigate('/')
-        } catch {
-            setError("Failed to log in")
-        }
-        setLoading(false)
-    }
+    //         setError("")
+    //         setLoading(true)
+    //         let loggedIn = await login(emailRef.current, passwordRef.current)
+    //         navigate('/')
+    //     } catch {
+    //         setError("Failed to log in")
+    //     }
+    //     setLoading(false)
+    // }
 
     const handleEmail = (e) => {
         setEmail(e.target.value);

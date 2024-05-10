@@ -1,11 +1,8 @@
 import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
-
 import { useAuth } from "../contexts/AuthContext"
 import {Link, useNavigate} from "react-router-dom"
-
-// import { useAuth } from "../contexts/AuthContext"
-import { Link, useNavigate } from "react-router-dom"
+// import { useAuth } from "../contexts/AuthContext
 // import CreateUser from "./CreateUser";
 import axios from 'axios'
 
@@ -14,7 +11,7 @@ export default function SignUp() {
     const usernameRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
-    const { signup } = useAuth()
+    // const { signup } = useAuth()
 
     const [email, setEmail] = useState()
     const [username, setUsername] = useState()
@@ -26,28 +23,28 @@ export default function SignUp() {
     const [loading, setLoading] = useState(false)
 
 
-    async function handleSubmit(e) {
-        e.preventDefault()
+    // async function handleSubmit1(e) {
+    //     e.preventDefault()
 
-        if (passwordRef.current !== passwordConfirmRef.current) {
-            return setError("Passwords do not match")
-        }
+    //     if (passwordRef.current !== passwordConfirmRef.current) {
+    //         return setError("Passwords do not match")
+    //     }
 
-        try {
-            setError("")
-            setLoading(true)
-            await signup(
-                usernameRef.current,
-                usernameRef.current,
-                emailRef.current,
-                passwordRef.current
-            )
-            navigate('/')
-        } catch {
-            setError("Failed to create an account")
-        }
-        setLoading(false)
-    }
+    //     try {
+    //         setError("")
+    //         setLoading(true)
+    //         await signup(
+    //             usernameRef.current,
+    //             usernameRef.current,
+    //             emailRef.current,
+    //             passwordRef.current
+    //         )
+    //         navigate('/')
+    //     } catch {
+    //         setError("Failed to create an account")
+    //     }
+    //     setLoading(false)
+    // }
 
     const handleEmail = (e) => {
         setEmail(e.target.value);
