@@ -6,14 +6,13 @@ require("dotenv").config();
 const app = express();
 const userRoutes = require("./src/routes/UserRoutes");
 const scoreRoutes = require("./src/routes/ScoreRoutes");
-
- const User = require("./src/models/User")
+const User = require("./src/models/User");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const corsOptions = {
-  origin: '*',
+  origin: "*",
 
   // credentials: true,
 };
@@ -23,7 +22,7 @@ app.use(cors(corsOptions));
 app.use(userRoutes);
 app.use(scoreRoutes);
 
- const DB_URI = process.env.DB_CONNECTION;
+const DB_URI = process.env.DB_CONNECTION;
 mongoose
   .connect(DB_URI)
   .then(() => {
@@ -33,37 +32,26 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-//app.use(cors(corsOptions));
-
-// app.post("./src/routes/User", (req, res)=>{
-//     User.create(req.body)
-//     .then(user => res.json(user))
-//     .catch(err=>res.json(err))
-// })
-
 app.post("/login", (req, res) => {
-  const {email, password} = req.body;
-  User.findOne({email : email})
-  .then(user => {
-      if(user) {
-          if(user.password === password){
-              res.json("Success")
-          }else{
-              res.json("The password is incorrect")
-          }
-      }else{
-          res.json("No record existed")
+  const { email, password } = req.body;
+  User.findOne({ email: email }).then((user) => {
+    if (user) {
+      if (user.password === password) {
+        res.json("Success");
+      } else {
+        res.json("The password is incorrect");
       }
-  })
-})
-
-
+    } else {
+      res.json("No record existed");
+    }
+  });
+});
 
 app.post("/signup", (req, res) => {
-    User.create(req.body)
-    .then(user => res.json(user))
-    .catch(err => res.json(err))
-})
+  User.create(req.body)
+    .then((user) => res.json(user))
+    .catch((err) => res.json(err));
+});
 
 // Server initialization
 const port = process.env.PORT || 3500;
