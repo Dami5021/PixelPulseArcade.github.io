@@ -6,6 +6,7 @@ require("dotenv").config();
 const app = express();
 const userRoutes = require("./src/routes/UserRoutes");
 const scoreRoutes = require("./src/routes/ScoreRoutes");
+const gameRoutes = require("./src/routes/GameRoutes");
 const User = require("./src/models/User");
 
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use(cors(corsOptions));
 //Routes
 app.use(userRoutes);
 app.use(scoreRoutes);
+app.use(gameRoutes);
 
 const DB_URI = process.env.DB_CONNECTION;
 mongoose
