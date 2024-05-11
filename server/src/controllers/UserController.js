@@ -26,12 +26,12 @@ const getUser = async (req, res) => {
 };
 
 const addUser = async (req, res) => {
-  const { username, name, email, password } = req.body;
-  if (!username || !name || !email || !password) {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
     res.status(400).json({ message: "All fields are required" });
     return;
   }
-  const user = new User({ username, name, email, password });
+  const user = new User({ username, email, password });
   try {
     const newUser = await user.save();
     res.status(201).json(newUser);
@@ -43,11 +43,11 @@ const addUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { username, name, email, password } = req.body;
+  const { username, email, password } = req.body;
   try {
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { username, name, email, password },
+      { username, email, password },
       { new: true }
     );
     res.status(200).json(updatedUser);
