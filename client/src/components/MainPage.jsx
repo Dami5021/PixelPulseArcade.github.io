@@ -1,6 +1,9 @@
 import {Button, Container, Row} from "react-bootstrap";
 import GameCard from "./GameCard.jsx";
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {serverRoot} from "../endpoints.js";
 
 //TODO: Read the games from the db
 
@@ -20,7 +23,7 @@ const games = [
         genre:"Action",
         type:"html5",
         desc:"Give those moles a good whack.",
-        imageSrc:"/src/assets/ratintro.png"
+        imageSrc:"/src/assets/crate.png"
     },
     {
         id:"2",
@@ -32,17 +35,18 @@ const games = [
     },
 ]
 
-export default function MainPage(){
+export default function MainPage(props){
+
     return(
             <Container className={'overflow-scroll z-0'} >
                 <Row className="d-flex justify-content-evenly flex-wrap py-5">
-                    {games.map((game, i) =>
+                    {props.games.map((game, i) =>
                         <GameCard
                             name={game.name}
                             genre={game.genre}
-                            desc={game.desc}
+                            desc={game.description}
                             type={game.type}
-                            imageSrc={game.imageSrc}
+                            imageSrc={game.imageSource}
                             id={game.id}
                             key={i}
                         />

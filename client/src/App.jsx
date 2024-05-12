@@ -9,26 +9,79 @@ import ForgotPassword from "./components/ForgotPassword.jsx";
 import SignUp from "./components/SignUp.jsx";
 import GamePage from "./components/GamePage.jsx";
 import {AuthProvider} from "./contexts/AuthContext.jsx";
+import {GamesProvider} from "./contexts/GamesContext.jsx";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {serverRoot} from "./endpoints.js";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 //TODO: Add private route for MainPage after Login is implemented?
+
+let gameScores = [];
 function App() {
+    const [games, setGames] = useState([]);
+    const [scores, setScores] = useState([]);
+    useEffect(() => {
+        axios.get(serverRoot + 'games')
+            .then((response) => {
+                setGames(response.data);
+            }).catch(error => {
+            if (error.response){
+                console.log("Error with response: " + error.response)
+            } else if (error.request){
+                console.log("Error with request: ")
+                console.log(error.request)
+            } else {
+                console.log("Non-axios error")
+            }
+        })
+    }, []);
+
+    // games.forEach(game => {
+    //     getScores(game.name);
+    // })
+    //
+    // function getScores(game){
+    //     useEffect(() => {
+    //         axios.get(serverRoot + 'scores/game/' + game)
+    //             .then((response) => {
+    //                 gameScores.push(response.data);
+    //                 setScores(gameScores);
+    //             }).catch(error => {
+    //             if (error.response){
+    //                 console.log("Error with response: " + error.response)
+    //             } else if (error.request){
+    //                 console.log("Error with request: ")
+    //                 console.log(error.request)
+    //             } else {
+    //                 console.log("Non-axios error")
+    //             }
+    //         })
+    //     }, []);
+    // }
+
+
+
 
   return (
     <Router>
         <AuthProvider>
-            <TopBar />
-            <Routes>
-                <Route exact path="/" element={<MainPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/game" element={<GamePage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/highscores" element={<HighScoresPage />} />
-            </Routes>
+            <GamesProvider>
+                <TopBar />
+                <Routes>
+                    <Route exact path="/" element={<MainPage games={games} />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/game" element={<GamePage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/highscores" element={<HighScoresPage scores={scores} games={games} />} />
+                </Routes>
+            </GamesProvider>
         </AuthProvider>
     </Router>
   )
 }
 
 export default App
+
