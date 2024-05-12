@@ -20,7 +20,7 @@ const games = [
         genre:"Action",
         type:"html5",
         desc:"Give those moles a good whack.",
-        imageSrc:"/src/assets/crate.png"
+        imageSrc:"/src/assets/ratintro.png"
     },
     {
         id:"2",
