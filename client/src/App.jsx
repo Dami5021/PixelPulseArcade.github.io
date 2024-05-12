@@ -14,13 +14,15 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {serverRoot} from "./endpoints.js";
 import {forEach} from "react-bootstrap/ElementChildren";
+import Messages from "./components/Messages.jsx";
 
 //TODO: Add private route for MainPage after Login is implemented?
 
 let gameScores = [];
 function App() {
     const [games, setGames] = useState([]);
-    const [scores, setScores] = useState([]);
+    const [user, setUser] = useState("Gamer9000");
+
     useEffect(() => {
         axios.get(serverRoot + 'games')
             .then((response) => {
@@ -75,7 +77,8 @@ function App() {
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/highscores" element={<HighScoresPage scores={scores} games={games} />} />
+                    <Route path="/highscores" element={<HighScoresPage games={games} />} />
+                    <Route path="/messages" element={<Messages user={user} />} />
                 </Routes>
             </GamesProvider>
         </AuthProvider>
