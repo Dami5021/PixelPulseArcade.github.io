@@ -19,14 +19,16 @@ const games = [
         name:"Whack A Rat",
         genre:"Action",
         type:"html5",
+        players:"1",
         desc:"Give those moles a good whack.",
-        imageSrc:"/src/assets/crate.png"
+        imageSrc:"/src/assets/whackarat.png"
     },
     {
         id:"2",
         name:"Tacocats",
         genre:"Adventure",
         type:"unity",
+        players:"1",
         desc:"Check out some cats.",
         imageSrc:"/src/assets/tacocats.png"
     },
