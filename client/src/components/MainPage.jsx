@@ -21,7 +21,7 @@ const games = [
         type:"html5",
         players:"1",
         desc:"Give those moles a good whack.",
-        imageSrc:"/src/assets/whackarat.png"
+        imageSrc:"/src/assets/ratintro.png"
     },
     {
         id:"2",
