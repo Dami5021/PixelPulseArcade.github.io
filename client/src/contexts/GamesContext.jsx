@@ -10,7 +10,7 @@ export function useGames(){
 
 export const GamesProvider = ({ children }) => {
 
-    const [currentGame, setCurrentGame] = useState()
+    const [currentGames, setCurrentGames] = useState()
     const [currentScores, setCurrentScores] = useState()
     const [loading, setLoading] = useState(false)
 
@@ -64,40 +64,63 @@ export const GamesProvider = ({ children }) => {
             })
     }
 
-    function getGame(gameID){
-        return axios.get(`${serverRoot}games/${gameID}`)
-            .then(response => response.data)
-            .catch(error => {
-                if (error.response) {
-                    console.log("Error with response: " + error.response)
-                } else if (error.request) {
-                    console.log("Error with request: ")
-                    console.log(error.request)
-                } else {
-                    console.log("Non-axios error")
-                }
-            })
+    function getGameID(gameID){
+        useEffect(() => {
+            axios.get(`${serverRoot}games/id/${gameID}`)
+                .then(response => setCurrentGame(response.data))
+                .catch(error => {
+                    if (error.response) {
+                        console.log("Error with response: " + error.response)
+                    } else if (error.request) {
+                        console.log("Error with request: ")
+                        console.log(error.request)
+                    } else {
+                        console.log("Non-axios error")
+                    }
+                })
+        }, []);
+    }
+
+    function getGame(gameName){
+        useEffect(() => {
+            axios.get(`${serverRoot}games/name/${gameName}`)
+                .then(response => response.data)
+                .catch(error => {
+                    if (error.response) {
+                        console.log("Error with response: " + error.response)
+                    } else if (error.request) {
+                        console.log("Error with request: ")
+                        console.log(error.request)
+                    } else {
+                        console.log("Non-axios error")
+                    }
+                })
+        }, []);
     }
 
     function getGames() {
-        return axios.get(`${serverRoot}games`)
-            .then(response => response.data)
-            .catch(error => {
-                if (error.response) {
-                    console.log("Error with response: " + error.response)
-                } else if (error.request) {
-                    console.log("Error with request: ")
-                    console.log(error.request)
-                } else {
-                    console.log("Non-axios error")
-                }
-            })
+        let games = [];
+        useEffect(() => {
+            axios.get(`${serverRoot}games`)
+                .then(response => games = response.data)
+                .catch(error => {
+                    if (error.response) {
+                        console.log("Error with response: " + error.response)
+                    } else if (error.request) {
+                        console.log("Error with request: ")
+                        console.log(error.request)
+                    } else {
+                        console.log("Non-axios error")
+                    }
+                })
+        }, []);
+
+        return games;
     }
 
     let value = {
-        currentGame,
-        setCurrentGame,
         currentScores,
+        currentGames,
         getScores,
         addScore,
         userScores,
