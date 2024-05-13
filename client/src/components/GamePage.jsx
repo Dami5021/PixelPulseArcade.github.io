@@ -49,7 +49,7 @@ export default function GamePage(){
                         {isGameOver === true && (
                             <p>{`Game Over! You've scored ${score} points.`}</p>
                         )}
-                        <Button className={'mt-5 w-50'} onClick={handleClickBack}>End</Button>
+                        <Button variant={'danger'} className={'mt-5 w-50'} onClick={handleClickBack}>End Game</Button>
                     </Row>
                 </Container>
             </>
