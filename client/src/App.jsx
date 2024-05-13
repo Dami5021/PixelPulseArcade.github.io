@@ -21,7 +21,7 @@ import Messages from "./components/Messages.jsx";
 let gameScores = [];
 function App() {
     const [games, setGames] = useState([]);
-    const [user, setUser] = useState("Gamer9000");
+    const [user, setUser] = useState();
 
     useEffect(() => {
         axios.get(serverRoot + 'games')
@@ -69,10 +69,10 @@ function App() {
     <Router>
         <AuthProvider>
             <GamesProvider>
-                <TopBar />
+                <TopBar user={user} setUser={setUser} />
                 <Routes>
                     <Route exact path="/" element={<MainPage games={games} />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/login" element={<Login setUser={() => setUser} />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/game" element={<GamePage />} />

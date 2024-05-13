@@ -5,7 +5,7 @@ import {useState} from "react";
 
 //TODO: Get the title to be centered regardless of toggle button
 //TODO: Fix bug where offcanvas resets dark mode
-export default function TopBar(){
+export default function TopBar({user, setUser}){
     const { logout, currentUser } = useAuth()
     const [currentUName, setCurrentUName] = useState("");
     const navigate = useNavigate()
@@ -14,23 +14,18 @@ export default function TopBar(){
     if (currentUser != null)
         setCurrentUName(currentUser.username)
 
-    async function handleLogout() {
-        setError("")
+    function handleLogout() {
+        setUser(null);
 
-        try {
-            await logout()
-            navigate('/login')
-        } catch {
-            setError("Failed to log out")
-        }
+        navigate('/login');
     }
 
-    return (
+    return  (
         <Navbar sticky={"top"} bg={"success"} data-bs-theme={'dark'} className={'text-light'} expand={false}>
             <Nav className={"mx-auto align-middle"} >
                 <Link to={"/"} className="h1 mb-0 link-underline link-underline-opacity-0">PixelPulse Arcade</Link>
             </Nav>
-            <p>{currentUName}</p>
+            <p></p>
             <div className={'mx-3'}>
                 <Navbar.Toggle aria-controls={"offcanvasNavbar-expand-false"}/>
                 <Navbar.Offcanvas placement={'end'} >
@@ -43,7 +38,7 @@ export default function TopBar(){
                             <Nav.Link href={'/messages'}>Messages</Nav.Link>
                             <Nav.Link href={'/settings'}>Settings</Nav.Link>
                             <Nav.Link href={'/highscores'}>High Scores</Nav.Link>
-                            <Nav.Link onSelect={handleLogout}>Log Out</Nav.Link>
+                            <Nav.Link href={'/login'}>Log Out</Nav.Link>
                         </Nav>
                     </Offcanvas.Body>
                 </Navbar.Offcanvas>

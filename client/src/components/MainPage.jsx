@@ -5,36 +5,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {serverRoot} from "../endpoints.js";
 
-//TODO: Read the games from the db
-
-const games = [
-    {
-        id:"0",
-        name:"Lil Game",
-        genre:"Sports",
-        desc:"You are the ball.",
-        type: "unity",
-        players:"1",
-        imageSrc:"/src/assets/stupidgame.png"
-    },
-    {
-        id:"1",
-        name:"Whack A Rat",
-        genre:"Action",
-        type:"html5",
-        desc:"Give those moles a good whack.",
-        imageSrc:"/src/assets/crate.png"
-    },
-    {
-        id:"2",
-        name:"Tacocats",
-        genre:"Adventure",
-        type:"unity",
-        desc:"Check out some cats.",
-        imageSrc:"/src/assets/tacocats.png"
-    },
-]
-
 export default function MainPage(props){
 
     return(

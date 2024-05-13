@@ -1,7 +1,7 @@
 import ScoresTable from "./ScoresTable.jsx";
-import {Button, Card, Container, Form, Modal, Row, Table} from "react-bootstrap";
+import {Alert, Button, Card, Container, Form, Modal, Row, Table} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {serverRoot} from "../endpoints.js";
 
@@ -14,6 +14,7 @@ export default function Messages(props) {
             timestamp:new Date().toISOString()
         }
     ]
+
     const [messages, setMessages] = React.useState(sampleMessages);
     const [currentMessage, setCurrentMessage] = React.useState("");
     const [showSendMessage, setShowSendMessage] = React.useState(false);
@@ -90,7 +91,7 @@ export default function Messages(props) {
                 show={expandMessage}
                 onHide={() => setExpandMessage(false)}
                 current_message={currentMessage}
-                onOpenSend={onOpenSend}
+                onOpenSend={() => onOpenSend}
             />
             <SendMessage show={showSendMessage} onHide={() => setShowSendMessage(false)} recipient={recipient}/>
         </Container>
@@ -105,9 +106,10 @@ function ExpandMessage({show, onHide, current_message, onOpenSend}){
             recipientUsername: "",
             senderUsername: "",
             message:"",
-            date:"",
+            timestamp:Date.now().toString(),
         }
     }
+
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
@@ -117,7 +119,7 @@ function ExpandMessage({show, onHide, current_message, onOpenSend}){
                 <Container>
                     <Row>
                         <p>From: {message.senderUsername}</p>
-                        <p>Time: {`${message.timestamp.slice(0, 10)},  ${message.timestamp.slice(11, -5)}`}</p>
+                        {/*<p>Time: {`${message.timestamp.slice(0, 10)},  ${message.timestamp.slice(11, -5)}`}</p>*/}
                     </Row>
                     <Row>
                         <p>{message.message}</p>
@@ -128,7 +130,7 @@ function ExpandMessage({show, onHide, current_message, onOpenSend}){
                 <Button variant="secondary" onClick={onHide}>
                     Close
                 </Button>
-                <Button variant="success" onClick={() => onOpenSend(message.senderUsername, false)}>
+                <Button variant="success" onClick={onOpenSend(message.senderUsername, false)}>
                     Reply
                 </Button>
             </Modal.Footer>
@@ -136,20 +138,59 @@ function ExpandMessage({show, onHide, current_message, onOpenSend}){
     )
 }
 
-function SendMessage({show, onHide, recipient}){
+function SendMessage({show, onHide, recipient, user}){
+    const [error, setError] = React.useState("");
+    const [inputs, setInputs] = useState({
+        recipientUsername: recipient,
+        senderUsername: user,
+        message:"",
+        timestamp:Date.now().toString(),
+    });
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({...values, [name]: value}))
+    }
+
+    const onSend = (e) => {
+        e.preventDefault();
+        axios.post(serverRoot + 'send/', {inputs})
+            .then((response) => {
+                alert("Success!");
+                onHide(false);
+            })
+            .catch(error =>
+                {
+                    setError('Failed to send message!');
+                    if (error.response) {
+                        console.log("Error with response: " + error.response)
+                    } else if (error.request) {
+                        console.log("Error with request: ")
+                        console.log(error.request)
+                    } else {
+                        console.log("Non-axios error")
+                    }
+                }
+            )
+    }
+    
+
     return (
         <Form onSubmit={onSend}>
             <Modal show={show} onHide={onHide}>
                 <Modal.Header closeButton>Send Message</Modal.Header>
                 <Modal.Body>
+                    {error && <Alert variant="danger">{error}</Alert>}
                     <Row className={'mb-3'}>
-                        <Form.Group controlID={'to'}>
-                            <Form.Control placeholder={'recipient username'} defaultValue={recipient}/>
+                        <Form.Group controlID={'RecipientUsername'}>
+                            <Form.Label>Recipient Username</Form.Label>
+                            <Form.Control name='recipientUsername' placeholder={'username...'} defaultValue={recipient} onChange={handleChange}/>
                         </Form.Group>
                     </Row>
                     <Row className={'mb-3'}>
-                        <Form.Group controlID={'message'}>
-                            <Form.Control placeholder={'message...'} />
+                        <Form.Group controlID={'Message'}>
+                            <Form.Label>Message</Form.Label>
+                            <Form.Control as={'textarea'} name='message' rows={'3'} placeholder={'message...'} onChange={handleChange}/>
                         </Form.Group>
                     </Row>
                 </Modal.Body>
@@ -164,24 +205,4 @@ function SendMessage({show, onHide, recipient}){
 
 }
 
-function onSend({message, onClose}){
-    axios.post(serverRoot + 'send/', {message})
-        .then((response) => {
-            alert("Success!");
-            onClose(false);
-        })
-        .catch(error =>
-            {
-
-                if (error.response) {
-                    console.log("Error with response: " + error.response)
-                } else if (error.request) {
-                    console.log("Error with request: ")
-                    console.log(error.request)
-                } else {
-                    console.log("Non-axios error")
-                }
-            }
-        )
-}
 

@@ -39,12 +39,12 @@ app.post("/login", (req, res) => {
   User.findOne({ email: email }).then((user) => {
     if (user) {
       if (user.password === password) {
-        res.json("Success");
+        res.json(user);
       } else {
-        res.json("The password is incorrect");
+        res.json("wrong password");
       }
     } else {
-      res.json("No record existed");
+      res.json("no user");
     }
   });
 });

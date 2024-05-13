@@ -4,8 +4,9 @@ import { useAuth } from "../contexts/AuthContext"
 import {Link, useNavigate} from "react-router-dom"
 // import { useAuth } from "../contexts/AuthContext"
 import axios from 'axios'
+import {serverRoot} from "../endpoints.js";
 //TODO: add auth
-export default function Login() {
+export default function Login({setUser}) {
     const emailRef = useRef()
     const passwordRef = useRef()
     // const { login } = useAuth()
@@ -45,14 +46,15 @@ export default function Login() {
 
     const handleSubmit = (e)=>{
         e.preventDefault()
-        axios.post("http://localhost:3500/login",{email, password})
+        axios.post(serverRoot + "login",{email, password})
         .then(result => { console.log(result)
-            if(result.data === "Success"){
-                navigate("/")
-            }else{
-                navigate("/signup")
-                alert("You are not registered to this service")
-
+            if(result.data === "wrong password"){
+                setError('Wrong password!');
+            }else if(result.data === "no user"){
+                setError('No user found!');
+            } else {
+                setUser(result.data);
+                navigate('/');
             }
         })
         .catch(err=> console.log(err))
