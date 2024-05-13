@@ -1,9 +1,9 @@
 import {Unity, useUnityContext} from "react-unity-webgl";
 import {useLocation} from "react-router";
-import {Container} from "react-bootstrap";
+import {Button, Container, Row} from "react-bootstrap";
 import {useCallback, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-//TODO: Stop game when navigating away from this page
 //TODO: Get scores from games
 export default function GamePage(){
 
@@ -12,12 +12,18 @@ export default function GamePage(){
     const gameName = location.state.slice(0, -5).toString();
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState();
-    const { unityProvider, addEventListener, removeEventListener } = useUnityContext({
+    const { unityProvider, addEventListener, removeEventListener, unload } = useUnityContext({
         loaderUrl: `/${gameName}/Build/${gameName}.loader.js`,
         dataUrl: `/${gameName}/Build/${gameName}.data`,
         frameworkUrl: `/${gameName}/Build/${gameName}.framework.js`,
         codeUrl: `/${gameName}/Build/${gameName}.wasm`,
     });
+    const navigate = useNavigate();
+
+    async function handleClickBack() {
+        await unload();
+        navigate('/');
+    }
 
     const handleGameOver = useCallback((score) => {
         setIsGameOver(true);
@@ -33,12 +39,21 @@ export default function GamePage(){
 
     if (gameType === 'unity'){
         return (
-            <Container className={'d-flex mx-auto mt-3'} >
-                <Unity unityProvider={unityProvider} className={'w-100 h-100 mx-auto'} />
-                {isGameOver === true && (
-                    <p>{`Game Over! You've scored ${score} points.`}</p>
-                )}
-            </Container>
+            <>
+                <Container className={'d-flex mx-auto mt-3'} >
+                    <Unity unityProvider={unityProvider} className={'w-100 h-100 mx-auto'} />
+
+                </Container>
+                <Container className={'mx-auto'}>
+                    <Row className="justify-content-center">
+                        {isGameOver === true && (
+                            <p>{`Game Over! You've scored ${score} points.`}</p>
+                        )}
+                        <Button className={'mt-5 w-50'} onClick={handleClickBack}>End</Button>
+                    </Row>
+                </Container>
+            </>
+
         )
     } else if (gameType === 'html5'){
         return (
@@ -53,54 +68,4 @@ export default function GamePage(){
     } else {
         return <Container className={'d-flex mx-auto mt-3'} >Invalid game type!</Container>
     }
-
 }
-
-// function UnityGame(gameName){
-//     const [isGameOver, setIsGameOver] = useState(false);
-//     const [score, setScore] = useState();
-//
-//     const { unityProvider, addEventListener, removeEventListener } = useUnityContext({
-//         loaderUrl: `/${gameName}/Build/${gameName}.loader.js`,
-//         dataUrl: `/${gameName}/Build/${gameName}.data`,
-//         frameworkUrl: `/${gameName}/Build/${gameName}.framework.js`,
-//         codeUrl: `/${gameName}/Build/${gameName}.wasm`,
-//     });
-//
-//     const handleGameOver = useCallback((score) => {
-//         setIsGameOver(true);
-//         setScore(score);
-//     }, []);
-//
-//     useEffect(() => {
-//         addEventListener("GameOver", handleGameOver);
-//         return () => {
-//             removeEventListener("GameOver", handleGameOver);
-//         };
-//     }, [addEventListener, removeEventListener, handleGameOver]);
-//
-//     return (
-//         <Container className={'d-flex mx-auto mt-3'} >
-//             <Unity unityProvider={unityProvider} className={'w-100 h-100 mx-auto'} />
-//             {isGameOver === true && (
-//                 <p>{`Game Over! You've scored ${score} points.`}</p>
-//             )}
-//         </Container>
-//     );
-// }
-//
-// function HTML5Game(gameName){
-//     const [isGameOver, setIsGameOver] = useState(false);
-//     const [score, setScore] = useState();
-//
-//     const handleGameOver = useCallback((score) => {
-//         setIsGameOver(true);
-//         setScore(score);
-//     }, []);
-//
-//     return (
-//         <Container className={'d-flex mx-auto mt-3'} >
-//             <iframe src={`/${gameName}/index.html`}></iframe>
-//         </Container>
-//     )
-// }

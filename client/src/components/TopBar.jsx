@@ -1,22 +1,19 @@
 import {Nav, Navbar, Offcanvas} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "../contexts/AuthContext.jsx";
 import {useState} from "react";
+import {useAuth} from "../contexts/AuthContext.jsx";
 
 //TODO: Get the title to be centered regardless of toggle button
 //TODO: Fix bug where offcanvas resets dark mode
-export default function TopBar({user, setUser}){
-    const { logout, currentUser } = useAuth()
-    const [currentUName, setCurrentUName] = useState("");
+//TODO: Private, public navbar
+export default function TopBar(){
     const navigate = useNavigate()
     const [error, setError] = useState("")
+    const { currentUser, logoutUser } = useAuth();
 
-    if (currentUser != null)
-        setCurrentUName(currentUser.username)
 
     function handleLogout() {
-        setUser(null);
-
+        logoutUser();
         navigate('/login');
     }
 
@@ -25,12 +22,12 @@ export default function TopBar({user, setUser}){
             <Nav className={"mx-auto align-middle"} >
                 <Link to={"/"} className="h1 mb-0 link-underline link-underline-opacity-0">PixelPulse Arcade</Link>
             </Nav>
-            <p></p>
+            <p className={'mb-0 d-none d-md-block'}>{currentUser.username}</p>
             <div className={'mx-3'}>
                 <Navbar.Toggle aria-controls={"offcanvasNavbar-expand-false"}/>
                 <Navbar.Offcanvas placement={'end'} >
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title>Menu</Offcanvas.Title>
+                    <Offcanvas.Header className={''} closeButton>
+                        <Offcanvas.Title>Menu --- {currentUser.username}</Offcanvas.Title>
                     </Offcanvas.Header>
                     <Offcanvas.Body className={"link-underline link-underline-opacity-0"}>
                         <Nav className="justify-content-end flex-grow-1 pe-3">

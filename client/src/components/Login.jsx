@@ -2,14 +2,11 @@ import React, { useRef, useState } from "react"
 import {Form, Button, Card, Alert, Container} from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import {Link, useNavigate} from "react-router-dom"
-// import { useAuth } from "../contexts/AuthContext"
 import axios from 'axios'
 import {serverRoot} from "../endpoints.js";
-//TODO: add auth
+
 export default function Login({setUser}) {
-    const emailRef = useRef()
-    const passwordRef = useRef()
-    // const { login } = useAuth()
+    const { loginUser } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -53,7 +50,7 @@ export default function Login({setUser}) {
             }else if(result.data === "no user"){
                 setError('No user found!');
             } else {
-                setUser(result.data);
+                loginUser(result.data);
                 navigate('/');
             }
         })
@@ -69,11 +66,11 @@ export default function Login({setUser}) {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" ref={emailRef} onChange={handleEmail} required/>
+                            <Form.Control type="email" onChange={handleEmail} required/>
                         </Form.Group>
                         <Form.Group id="password">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" ref={passwordRef} onChange={handlePassword} required/>
+                            <Form.Control type="password" onChange={handlePassword} required/>
                         </Form.Group>
                         <Button variant={'success'} disabled={loading} className="w-100 my-3" type="submit">
                             Log In

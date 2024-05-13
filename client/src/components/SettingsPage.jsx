@@ -2,76 +2,96 @@ import {Button, Container, Row, Card, Form, Col, Modal, Alert} from "react-boots
 import React, {useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "../contexts/AuthContext.jsx";
+import axios from "axios";
+import {serverRoot} from "../endpoints.js";
 
 //TODO: add actual game settings
-//TODO: use context for db calls
-export default function SettingsPage(){
-    const emailRef = useRef()
-    const passwordRef = useRef()
-    const passwordConfirmRef = useRef()
-    const passwordDeleteRef = useRef()
-    const { deleteUser, logout, currentUser, updateEmail, updatePassword } = useAuth();
+//TODO: make dark mode change bg
+export default function SettingsPage(props){
+    const { currentUser, logoutUser } = useAuth();
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [passwordConfirm, setPasswordConfirm] = useState("")
+    const [passwordDelete, setPasswordDelete] = useState("")
     const [errorDelete, setErrorDelete] = useState("")
     const [errorEmail, setErrorEmail] = useState("")
     const [errorPass, setErrorPass] = useState("")
     const [errorLogout, setErrorLogout] = useState("")
-    const navigate = useNavigate()
-    async function handleLogout() {
-        setErrorLogout("")
+    const [successPass, setSuccessPass] = useState("")
+    const [successEmail, setSuccessEmail] = useState("")
 
-        try {
-            await logout()
-            navigate('/login')
-        } catch {
-            setErrorLogout("Failed to log out")
-        }
+    const navigate = useNavigate()
+
+    const handleEmail = (e) => {
+        setEmail(e.target.value);
+    };
+    const handlePassword = (e) => {
+        setPassword(e.target.value);
+    };
+    const handlePasswordConfirm = (e) => {
+        setPasswordConfirm(e.target.value);
+    };
+    const handlePasswordDelete = (e) => {
+        setPasswordDelete(e.target.value);
+    };
+
+    function handleLogout() {
+        logoutUser();
+        navigate('/login')
     }
-    async function handleDeleteUser(e) {
-        if (passwordRef.current !== currentUser.password) {
-            return setErrorDelete("Wrong password!")
-        }
+    function handleDeleteUser(e) {
         e.preventDefault()
         setErrorDelete("")
-
-        try {
-            await logout()
-        } catch {
-            setErrorDelete("Failed to log out")
+        if (passwordDelete !== currentUser.password) {
+            setErrorDelete("Wrong password!");
+            return;
         }
-        try {
-            await deleteUser()
-            navigate('/login')
-        } catch {
-            setErrorDelete("Failed to delete user")
-        }
+        axios.delete(`${serverRoot}users/${currentUser.id}`)
+            .then(response => {
+                logoutUser();
+                navigate('/login');
+            })
+            .catch(error => {
+                console.log(error);
+                setErrorDelete("Failed to delete user");
+            })
     }
-    async function handleUpdatePassword(e){
-        e.preventDefault()
-
-        if (passwordRef.current !== passwordConfirmRef.current) {
-            return setErrorPass("Passwords do not match")
+    function handleUpdatePassword(e){
+        e.preventDefault();
+        setErrorPass("");
+        if (password !== passwordConfirm) {
+            setErrorPass("Passwords do not match");
+            return false;
         }
+        axios.patch(`${serverRoot}users/${currentUser.id}`, {
+            username: props.user.username,
+            email: props.user.email,
+            password: password,
+        })
+            .then(response => {
+                setSuccessPass("Password changed successfully!");
+            })
+            .catch(error => {
+                console.log(error);
+                setErrorPass("Failed to update password");
+            })
 
-        try {
-            setErrorPass("")
-            await updatePassword(
-                passwordRef.current
-            )
-        } catch {
-            setErrorPass("Failed to update password")
-        }
     }
     async function handleUpdateEmail(e){
-        e.preventDefault()
-
-        try {
-            setErrorEmail("")
-            await updatePassword(
-                emailRef.current
-            )
-        } catch {
-            setErrorEmail("Failed to update email")
-        }
+        e.preventDefault();
+        setErrorEmail("");
+        axios.patch(`${serverRoot}users/${currentUser.id}`, {
+            username: props.user.username,
+            email: email,
+            password: props.user.password,
+        })
+            .then(response => {
+                setSuccessPass("Password changed successfully!");
+            })
+            .catch(error => {
+                console.log(error);
+                setErrorPass("Failed to update password");
+            })
     }
     const [showAreYouSure, setShowAreYouSure] = useState(false)
     function openAreYouSure() {
@@ -105,7 +125,7 @@ export default function SettingsPage(){
                     <p>This will PERMANENTLY delete your account!</p>
                     <p>If you are sure, enter your password.</p>
                     <Form onSubmit={handleDeleteUser}>
-                        <Form.Control type="password" ref={passwordDeleteRef} className="mb-3"/>
+                        <Form.Control type="password" onChange={handlePasswordDelete} className="mb-3"/>
                         <Button type="submit" variant="danger">DELETE ACCOUNT</Button>
                     </Form>
                 </Modal.Body>
@@ -128,15 +148,15 @@ export default function SettingsPage(){
                     </Link>
                 </Card.Header>
                 <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
-                    <Card.Header as="h5">Global Game Settings</Card.Header>
-                    <Card.Body>
-                        <Form>
-                            <Form.Group controlId="fullscreen">
-                                <Form.Check type="switch" label="Launch games in fullscreen" />
-                            </Form.Group>
-                        </Form>
-                        <Form.Check type={"switch"} label={"Do not appear on high score board"} />
-                    </Card.Body>
+                    {/*<Card.Header as="h5">Global Game Settings</Card.Header>*/}
+                    {/*<Card.Body>*/}
+                    {/*    <Form>*/}
+                    {/*        <Form.Group controlId="fullscreen">*/}
+                    {/*            <Form.Check type="switch" label="Launch games in fullscreen" />*/}
+                    {/*        </Form.Group>*/}
+                    {/*    </Form>*/}
+                    {/*    <Form.Check type={"switch"} label={"Do not appear on high score board"} />*/}
+                    {/*</Card.Body>*/}
                     <Card.Header as="h5">Account Settings</Card.Header>
                     <Card.Body>
                         <Form.Check
@@ -150,9 +170,10 @@ export default function SettingsPage(){
                         <Form onSubmit={handleUpdateEmail}>
                             <Row className="align-items-end mb-4">
                                 {errorEmail && <Alert variant="danger">{errorEmail}</Alert>}
+                                {successEmail && <Alert variant="success">{successEmail}</Alert>}
                                 <Form.Group as={Col} controlId="updateEmail" className="col-7 col-sm-6">
                                     <Form.Label>Update email</Form.Label>
-                                    <Form.Control type="email" defaultValue="gamer@gamer.com" ref={emailRef} />
+                                    <Form.Control type="email" defaultValue={currentUser.email} onChange={handleEmail} />
                                 </Form.Group>
                                 <Col>
                                     <Button variant="secondary" type="submit">Update</Button>
@@ -162,13 +183,14 @@ export default function SettingsPage(){
                         <Form onSubmit={handleUpdatePassword}>
                             <Row className="mb-3">
                                 {errorPass && <Alert variant="danger">{errorPass}</Alert>}
+                                {successPass && <Alert variant="success">{successPass}</Alert>}
                                 <Form.Group as={Col} controlId="updatePassword">
                                     <Form.Label>Update password</Form.Label>
-                                    <Form.Control type="password" />
+                                    <Form.Control type="password" onChange={handlePassword} />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="updatePasswordConfirm">
                                     <Form.Label>Confirm password</Form.Label>
-                                    <Form.Control type="password" />
+                                    <Form.Control type="password" onChange={handlePasswordConfirm} />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">

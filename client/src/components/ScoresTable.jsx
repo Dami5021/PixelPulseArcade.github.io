@@ -1,6 +1,5 @@
 import {Table} from "react-bootstrap";
 import React, {useEffect} from "react";
-import {useGames} from "../contexts/GamesContext.jsx";
 import axios from "axios";
 import {serverRoot} from "../endpoints.js";
 
@@ -10,24 +9,8 @@ export default function ScoresTable(props){
         return
     }
 
-    const { getScores, currentScores } = useGames();
     const [scores, setScores] = React.useState([]);
     let rows = [];
-
-    // getScores(props.game.name)
-    //     .then(promise => {
-    //         setScores(currentScores);
-    //         scores.forEach((score, idx) => {
-    //             rows.push(
-    //                 <tr>
-    //                     <td>{idx + 1}</td>
-    //                     <td>{score.username}</td>
-    //                     <td>{score.score}</td>
-    //                     <td>{score.date.slice(0, 10)}</td>
-    //                 </tr>
-    //             )
-    //         })
-    //     });
 
     useEffect(() => {
         axios.get(serverRoot + 'scores/game/' + props.game.name)
@@ -45,7 +28,6 @@ export default function ScoresTable(props){
         })
     }, []);
 
-
     scores.sort((a, b) => b.score - a.score).forEach((score, idx) => {
         rows.push(
             <tr>
@@ -56,10 +38,6 @@ export default function ScoresTable(props){
             </tr>
         )
     })
-
-
-
-
 
     return (
         <Table striped bordered hover>

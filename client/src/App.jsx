@@ -16,12 +16,11 @@ import {serverRoot} from "./endpoints.js";
 import {forEach} from "react-bootstrap/ElementChildren";
 import Messages from "./components/Messages.jsx";
 
-//TODO: Add private route for MainPage after Login is implemented?
+//TODO: Add private route for MainPage
 
 let gameScores = [];
 function App() {
     const [games, setGames] = useState([]);
-    const [user, setUser] = useState("Gamer9000");
 
     useEffect(() => {
         axios.get(serverRoot + 'games')
@@ -39,48 +38,20 @@ function App() {
         })
     }, []);
 
-    // games.forEach(game => {
-    //     getScores(game.name);
-    // })
-    //
-    // function getScores(game){
-    //     useEffect(() => {
-    //         axios.get(serverRoot + 'scores/game/' + game)
-    //             .then((response) => {
-    //                 gameScores.push(response.data);
-    //                 setScores(gameScores);
-    //             }).catch(error => {
-    //             if (error.response){
-    //                 console.log("Error with response: " + error.response)
-    //             } else if (error.request){
-    //                 console.log("Error with request: ")
-    //                 console.log(error.request)
-    //             } else {
-    //                 console.log("Non-axios error")
-    //             }
-    //         })
-    //     }, []);
-    // }
-
-
-
-
   return (
     <Router>
         <AuthProvider>
-            <GamesProvider>
-                <TopBar user={user} setUser={setUser} />
-                <Routes>
-                    <Route exact path="/" element={<MainPage games={games} />} />
-                    <Route path="/login" element={<Login setUser={() => setUser} />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/game" element={<GamePage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/highscores" element={<HighScoresPage games={games} />} />
-                    <Route path="/messages" element={<Messages user={user} />} />
-                </Routes>
-            </GamesProvider>
+            <TopBar />
+            <Routes>
+                <Route exact path="/" element={<MainPage games={games} />} />
+                <Route path="/login" element={<Login  />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/game" element={<GamePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/highscores" element={<HighScoresPage games={games} />} />
+                <Route path="/messages" element={<Messages />} />
+            </Routes>
         </AuthProvider>
     </Router>
   )

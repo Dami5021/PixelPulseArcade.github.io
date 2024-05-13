@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import {Accordion} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
+//TODO: Game cards should be collapsed by default
 export default function GameCard(props) {
     const pathName = props.name.replace(/\s+/g, '')
     return (

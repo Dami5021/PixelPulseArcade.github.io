@@ -61,11 +61,16 @@ export default function SignUp() {
 
     const handleSubmit = (e)=>{
         e.preventDefault()
+        setError("")
         axios.post("http://localhost:3500/signup", {username,email,password,passwordConfirm})
         .then(result => { console.log(result)
          navigate("/login")
         })
-        .catch(err=> console.log(err))
+        .catch(err=>
+        {
+            console.log(err)
+            setError("Failed to sign up!")
+        })
     }
 
     return (

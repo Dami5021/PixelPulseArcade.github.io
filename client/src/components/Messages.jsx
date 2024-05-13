@@ -1,20 +1,20 @@
-import ScoresTable from "./ScoresTable.jsx";
 import {Alert, Button, Card, Container, Form, Modal, Row, Table} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {serverRoot} from "../endpoints.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
 
 export default function Messages(props) {
     const sampleMessages = [
         {
             senderUsername:"newusername",
             recipientUsername:"Gamer9000",
-            message:"laksdflkasdflkasdflk",
+            message:"Hey! What's up? Why don't you get good? Love, NUN",
             timestamp:new Date().toISOString()
         }
     ]
 
+    const { currentUser } = useAuth();
     const [messages, setMessages] = React.useState(sampleMessages);
     const [currentMessage, setCurrentMessage] = React.useState("");
     const [showSendMessage, setShowSendMessage] = React.useState(false);
@@ -23,7 +23,7 @@ export default function Messages(props) {
     let rows = [];
 
     useEffect(() => {
-        axios.get(serverRoot + 'user/' + props.user)
+        axios.get(serverRoot + 'user/' + currentUser.username)
             .then((response) => {
                 setMessages(response.data);
             }).catch(error => {
@@ -74,6 +74,7 @@ export default function Messages(props) {
                 timestamp:Date.now().toString(),
             }
         }
+        //TODO: The date slice crashes initially
         return (
             <Modal show={expandMessage} onHide={() => setExpandMessage(false)}>
                 <Modal.Header closeButton>
@@ -101,7 +102,7 @@ export default function Messages(props) {
             </Modal>
         )
     }
-
+    //TODO: Looks bad on mobile, reference ScoresTable?
     return (
         <Container className={'overflow-scroll h-100'}>
             <Card className={"my-5"}>
@@ -135,14 +136,14 @@ export default function Messages(props) {
                 show={showSendMessage}
                 onHide={() => setShowSendMessage(false)}
                 recipient={recipient}
-                user={props.user}
+                user={currentUser.username}
             />
         </Container>
 
     )
 }
 
-
+//TODO: SendMessage seems to be in an infinite loop when opened from 'reply'
 function SendMessage({show, onHide, recipient, user}){
     const [error, setError] = React.useState("");
     const [inputs, setInputs] = useState({
