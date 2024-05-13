@@ -36,7 +36,7 @@ export default function TopBar(){
                     </Offcanvas.Header>
                     <Offcanvas.Body className={"link-underline link-underline-opacity-0"}>
                         <Nav className="justify-content-end flex-grow-1 pe-3">
-                        <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
+                        <Nav.Link onClick={() => handleClick('/')}>Home</Nav.Link>
                          <Nav.Link onClick={() => handleClick('/messages')} >Messages</Nav.Link>
                          <Nav.Link onClick={() => handleClick('/settings')}>Settings</Nav.Link>
                          <Nav.Link onClick={() => handleClick('/highscores')}>High Scores</Nav.Link>
