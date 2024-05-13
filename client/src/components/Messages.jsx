@@ -60,6 +60,7 @@ export default function Messages(props) {
     }
 
     function onReply(){
+        setExpandMessage(false);
         setRecipient(currentMessage.senderUsername);
         setShowSendMessage(true);
     }
@@ -158,10 +159,12 @@ function SendMessage({show, onHide, recipient, user}){
     }
 
     const onSend = (e) => {
+        setError("");
         e.preventDefault();
         console.log(inputs);
-        axios.post(serverRoot + 'send/', {inputs})
+        axios.post(serverRoot + 'send', {inputs})
             .then((response) => {
+                console.log(response.data)
                 alert("Success!");
                 onHide(false);
             })
