@@ -21,7 +21,7 @@ import Messages from "./components/Messages.jsx";
 let gameScores = [];
 function App() {
     const [games, setGames] = useState([]);
-    const [user, setUser] = useState();
+    const [user, setUser] = useState("Gamer9000");
 
     useEffect(() => {
         axios.get(serverRoot + 'games')

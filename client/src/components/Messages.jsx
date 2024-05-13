@@ -41,7 +41,7 @@ export default function Messages(props) {
 
     messages.sort((a, b) => b.timestamp - a.timestamp).forEach((message, idx) => {
         rows.push(
-            <tr onClick={() => onExpandMessage(message, onOpenSend)}>
+            <tr onClick={() => onExpandMessage(message)}>
                 <td>{message.senderUsername}</td>
                 <td>{message.message.slice(0, 30)}...</td>
                 <td>{message.timestamp.slice(0, 10)}</td>
@@ -54,13 +54,52 @@ export default function Messages(props) {
         setExpandMessage(true);
     }
 
-    function onOpenSend(recipient, notReply){
-        let preRecipient = recipient;
-        if (notReply){
-            preRecipient = "";
-        }
-        setRecipient(preRecipient);
+    function onOpenSend(){
+        setRecipient("");
         setShowSendMessage(true);
+    }
+
+    function onReply(){
+        setRecipient(currentMessage.senderUsername);
+        setShowSendMessage(true);
+    }
+
+    function ExpandMessage(){
+        let message = currentMessage;
+        if (message === null || message === undefined){
+            message = {
+                recipientUsername: "",
+                senderUsername: "",
+                message:"",
+                timestamp:Date.now().toString(),
+            }
+        }
+        return (
+            <Modal show={expandMessage} onHide={() => setExpandMessage(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Message</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Row>
+                            <p><b>From:</b> {message.senderUsername}</p>
+                            {/*<p><b>Time:</b> {`${message.timestamp.slice(0, 10)},  ${message.timestamp.slice(11, -5)}`}</p>*/}
+                        </Row>
+                        <Row>
+                            <p>{message.message}</p>
+                        </Row>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setExpandMessage(false)}>
+                        Close
+                    </Button>
+                    <Button variant="success" onClick={onReply}>
+                        Reply
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
     }
 
     return (
@@ -68,7 +107,7 @@ export default function Messages(props) {
             <Card className={"my-5"}>
                 <Card.Header as="h3">
                     Messages
-                    <Button variant="success" className="float-end" onClick={() => onOpenSend(recipient, true)}>
+                    <Button variant="success" className="float-end" onClick={onOpenSend}>
                         Send Message
                     </Button>
                 </Card.Header>
@@ -91,60 +130,25 @@ export default function Messages(props) {
                 show={expandMessage}
                 onHide={() => setExpandMessage(false)}
                 current_message={currentMessage}
-                onOpenSend={() => onOpenSend}
             />
-            <SendMessage show={showSendMessage} onHide={() => setShowSendMessage(false)} recipient={recipient}/>
+            <SendMessage
+                show={showSendMessage}
+                onHide={() => setShowSendMessage(false)}
+                recipient={recipient}
+                user={props.user}
+            />
         </Container>
 
     )
 }
 
-function ExpandMessage({show, onHide, current_message, onOpenSend}){
-    let message = current_message
-    if (message === null || message === undefined){
-        message = {
-            recipientUsername: "",
-            senderUsername: "",
-            message:"",
-            timestamp:Date.now().toString(),
-        }
-    }
-
-    return (
-        <Modal show={show} onHide={onHide}>
-            <Modal.Header closeButton>
-                <Modal.Title>Message</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container>
-                    <Row>
-                        <p>From: {message.senderUsername}</p>
-                        {/*<p>Time: {`${message.timestamp.slice(0, 10)},  ${message.timestamp.slice(11, -5)}`}</p>*/}
-                    </Row>
-                    <Row>
-                        <p>{message.message}</p>
-                    </Row>
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
-                    Close
-                </Button>
-                <Button variant="success" onClick={onOpenSend(message.senderUsername, false)}>
-                    Reply
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
 
 function SendMessage({show, onHide, recipient, user}){
     const [error, setError] = React.useState("");
     const [inputs, setInputs] = useState({
         recipientUsername: recipient,
         senderUsername: user,
-        message:"",
-        timestamp:Date.now().toString(),
+        message:""
     });
     const handleChange = (event) => {
         const name = event.target.name;
@@ -154,6 +158,7 @@ function SendMessage({show, onHide, recipient, user}){
 
     const onSend = (e) => {
         e.preventDefault();
+        console.log(inputs);
         axios.post(serverRoot + 'send/', {inputs})
             .then((response) => {
                 alert("Success!");
@@ -173,12 +178,13 @@ function SendMessage({show, onHide, recipient, user}){
                 }
             )
     }
-    
-
     return (
-        <Form onSubmit={onSend}>
+
             <Modal show={show} onHide={onHide}>
-                <Modal.Header closeButton>Send Message</Modal.Header>
+                <Form onSubmit={onSend}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Send Message</Modal.Title>
+                </Modal.Header>
                 <Modal.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Row className={'mb-3'}>
@@ -198,11 +204,10 @@ function SendMessage({show, onHide, recipient, user}){
                     <Button variant="secondary" onClick={onHide}>Close</Button>
                     <Button variant='success' type='submit'>Send</Button>
                 </Modal.Footer>
+                </Form>
             </Modal>
-        </Form>
 
         )
-
 }
 
 
