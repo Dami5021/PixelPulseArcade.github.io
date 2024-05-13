@@ -15,7 +15,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(
         {
-            id: 2,
+            id: 0,
             username: "Gamer9000",
             email: "gamer@gamer.com",
             password: "gamer"
