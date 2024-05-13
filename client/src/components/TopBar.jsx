@@ -31,11 +31,11 @@ export default function TopBar(){
                     </Offcanvas.Header>
                     <Offcanvas.Body className={"link-underline link-underline-opacity-0"}>
                         <Nav className="justify-content-end flex-grow-1 pe-3">
-                            <Nav.Link href={'/'}>Home</Nav.Link>
-                            <Nav.Link href={'/messages'}>Messages</Nav.Link>
-                            <Nav.Link href={'/settings'}>Settings</Nav.Link>
-                            <Nav.Link href={'/highscores'}>High Scores</Nav.Link>
-                            <Nav.Link href={'/login'}>Log Out</Nav.Link>
+                        <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
+                         <Nav.Link onClick={() => navigate('/messages')}>Messages</Nav.Link>
+                         <Nav.Link onClick={() => navigate('/settings')}>Settings</Nav.Link>
+                         <Nav.Link onClick={() => navigate('/highscores')}>High Scores</Nav.Link>
+                         <Nav.Link onClick={handleLogout}>Log Out</Nav.Link>
                         </Nav>
                     </Offcanvas.Body>
                 </Navbar.Offcanvas>
